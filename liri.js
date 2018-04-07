@@ -3,6 +3,7 @@
     var Twitter = require('twitter');
     var Spotify = require('node-spotify-api');
     var request = require('request-promise');
+    let fs = require('fs-extra');
 
     // Import the keys.js file
     let keys = require('./keys.js')
