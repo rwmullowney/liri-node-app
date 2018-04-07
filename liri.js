@@ -13,11 +13,13 @@
         id: keys.spotify.id,
         secret: keys.spotify.secret
     });
-    var client = new Twitter(keys.twitter);
 
-    // console.log(spotify)
-    // console.log(spotify.credentials.id)
-    // console.log(client.consumer_key)
+    var client = new Twitter({
+        consumer_key: keys.twitter.consumer_key,
+        consumer_secret: keys.twitter.consumer_secret,
+        access_token_key: keys.twitter.access_token_key,
+        access_token_secret: keys.twitter.access_token_secret
+    });
 
     // Take the first word of the player input to determine the action
     let action = process.argv[2];
@@ -34,14 +36,31 @@
     userInput = userInputArray.join(" ")
 
     // If the user doesn't provide a specific song, it defaults to The Sign by Ace of Base
-    if (action === "spotify-this-song" && userInputArray.length == 0){
-            userInput = "The Sign Ace of Base"
-        
+    if (action === "spotify-this-song" && userInputArray.length == 0) {
+        userInput = "The Sign Ace of Base"
+
     }
 
 
     switch (action) {
         case "my-tweets":
+            var params = {
+                screen_name: 'JimothyBadJokes'
+            };
+            client.get('statuses/user_timeline', params, function (error, tweets, response) {
+                if (!error) {
+
+                    console.log(params.screen_name + "'s most recent tweets:")
+                    for (var i = 0; i < tweets.length; i++) {
+                        console.log(`
+        ${tweets[i].created_at}
+        ${tweets[i].text}
+
+        =========================`)
+                    }
+                }
+            });
+            break;
 
         case "spotify-this-song":
             spotify.search({
@@ -53,12 +72,12 @@
                     return console.log('Error occurred: ' + err);
                 }
                 console.log(`
-                Artist(s): ${data.tracks.items[0].artists[0].name}
-                Song title: ${data.tracks.items[0].name}
-                Album: ${data.tracks.items[0].album.name}
-                Preview link: ${data.tracks.items[0].preview_url}
-                `)
-                
+        Artist(s): ${data.tracks.items[0].artists[0].name}
+        Song title: ${data.tracks.items[0].name}
+        Album: ${data.tracks.items[0].album.name}
+        Preview link: ${data.tracks.items[0].preview_url}
+        `)
+
             })
             break;
 
@@ -77,9 +96,10 @@
         Actors: ${data.Actors}
         `)
                 })
-                break;
+            break;
 
         case "do-what-it-says":
+            break;
     }
 
 })();
