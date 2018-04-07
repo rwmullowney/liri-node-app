@@ -3,7 +3,7 @@
     var Twitter = require('twitter');
     var Spotify = require('node-spotify-api');
     var request = require('request-promise');
-    let fs = require('fs-extra');
+    const fs = require('fs-extra');
 
     // Import the keys.js file
     let keys = require('./keys.js')
@@ -14,7 +14,6 @@
         id: keys.spotify.id,
         secret: keys.spotify.secret
     });
-
     var client = new Twitter({
         consumer_key: keys.twitter.consumer_key,
         consumer_secret: keys.twitter.consumer_secret,
@@ -42,7 +41,7 @@
 
     }
 
-
+function runUserInput(){
     switch (action) {
         case "my-tweets":
             var params = {
@@ -100,7 +99,23 @@
             break;
 
         case "do-what-it-says":
+            fs.readFile("random.txt", 'utf8', function (err, data) {
+                if (err)
+                    return console.log(err);
+
+                randomText = data;
+
+                liriCommand = randomText.split(",");
+                action = liriCommand[0];
+                userInput = liriCommand[1];
+                
+                runUserInput();
+                
+            })
             break;
     }
+}
+
+runUserInput()
 
 })();
